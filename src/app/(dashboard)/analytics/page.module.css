@@ -1,0 +1,109 @@
+.content {
+  padding: 24px 32px;
+  max-width: var(--content-max-width);
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.chartCard {
+  margin-bottom: 24px;
+}
+
+.chartHeader {
+  padding: 20px 24px 0;
+}
+
+.chartTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chartContainer {
+  padding: 16px 16px 12px 8px;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+.tableSection {
+  overflow: hidden;
+}
+
+.pieSection {
+  overflow: hidden;
+}
+
+.pieContainer {
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pieLegend {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.pieLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.pieLegendItem strong {
+  color: var(--text-primary);
+}
+
+.pieLegendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.tooltip {
+  background: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+}
+
+.tooltipLabel {
+  font-size: 11px;
+  color: #94A3B8;
+  margin-bottom: 4px;
+}
+
+.tooltipValue {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+@media (max-width: 1200px) {
+  .summaryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
