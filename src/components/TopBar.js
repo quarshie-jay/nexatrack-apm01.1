@@ -1,12 +1,18 @@
 'use client';
 
-import { Search, Bell, ChevronDown } from 'lucide-react';
+import { Search, Bell, ChevronDown, Menu } from 'lucide-react';
+import { useSidebar } from './SidebarContext';
 import styles from './TopBar.module.css';
 
 export default function TopBar({ title, subtitle }) {
+  const { toggle } = useSidebar();
+
   return (
     <header className={styles.topbar}>
       <div className={styles.left}>
+        <button className={styles.menuBtn} onClick={toggle} aria-label="Toggle menu" id="mobile-menu-btn">
+          <Menu size={20} />
+        </button>
         <div>
           <h1 className={styles.title}>{title}</h1>
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
