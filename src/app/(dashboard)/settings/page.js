@@ -9,7 +9,6 @@ import styles from './page.module.css';
 export default function SettingsPage() {
   const [tariffRate, setTariffRate] = useState(TARIFF_RATE.toString());
   const [lowCreditThreshold, setLowCreditThreshold] = useState('50');
-  const [refreshInterval, setRefreshInterval] = useState('10');
   const [currency, setCurrency] = useState('GHS');
 
   return (
@@ -75,50 +74,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Data Refresh */}
-        <div className={`card ${styles.section}`}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Data & Connection</h2>
-            <p className={styles.sectionDesc}>InfluxDB connection and data refresh settings.</p>
-          </div>
-          <div className={styles.fields}>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="refresh-interval">Dashboard Refresh Interval (seconds)</label>
-              <select
-                id="refresh-interval"
-                className="input"
-                value={refreshInterval}
-                onChange={e => setRefreshInterval(e.target.value)}
-              >
-                <option value="5">5 seconds</option>
-                <option value="10">10 seconds</option>
-                <option value="30">30 seconds</option>
-                <option value="60">60 seconds</option>
-              </select>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="influx-url">InfluxDB URL</label>
-              <input
-                id="influx-url"
-                type="text"
-                className="input"
-                placeholder="https://your-influxdb-instance.com"
-                disabled
-              />
-              <span className={styles.hint}>Configure via environment variables. Connection not yet active.</span>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="influx-bucket">InfluxDB Bucket</label>
-              <input
-                id="influx-bucket"
-                type="text"
-                className="input"
-                placeholder="electricity_readings"
-                disabled
-              />
-            </div>
-          </div>
-        </div>
 
         <div className={styles.actions}>
           <button className="btn btn-primary" id="save-settings-btn">

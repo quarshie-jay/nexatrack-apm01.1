@@ -4,9 +4,10 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
   LayoutDashboard, Zap, BarChart3, Users,
-  CreditCard, Bell, Settings, LogOut, Activity, X
+  CreditCard, Bell, Settings, LogOut, Activity, X, PlusCircle
 } from 'lucide-react';
 import { useSidebar } from './SidebarContext';
+import { useAuth } from './AuthContext';
 import styles from './Sidebar.module.css';
 
 const NAV_ITEMS = [
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
   { href: '/analytics', label: 'Usage Analytics', icon: BarChart3 },
   { href: '/tenants', label: 'Tenant Management', icon: Users },
   { href: '/billing', label: 'Credits & Billing', icon: CreditCard },
+  { href: '/topup', label: 'Top-Up Credits', icon: PlusCircle },
   { href: '/alerts', label: 'Alerts', icon: Bell },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
@@ -22,6 +24,7 @@ const NAV_ITEMS = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { isOpen, close } = useSidebar();
+  const { logout } = useAuth();
 
   const handleNavClick = () => {
     // Close sidebar on mobile when navigating
@@ -73,7 +76,7 @@ export default function Sidebar() {
 
           <div className={styles.navSection}>
             <span className={styles.navLabel}>Management</span>
-            {NAV_ITEMS.slice(3, 6).map(item => {
+            {NAV_ITEMS.slice(3, 7).map(item => {
               const Icon = item.icon;
               const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
               return (
@@ -92,7 +95,7 @@ export default function Sidebar() {
 
           <div className={styles.navSection}>
             <span className={styles.navLabel}>System</span>
-            {NAV_ITEMS.slice(6).map(item => {
+            {NAV_ITEMS.slice(7).map(item => {
               const Icon = item.icon;
               const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
               return (
@@ -111,7 +114,7 @@ export default function Sidebar() {
         </nav>
 
         <div className={styles.footer}>
-          <button className={styles.navItem}>
+          <button className={styles.navItem} onClick={logout}>
             <LogOut size={18} />
             <span>Sign Out</span>
           </button>

@@ -2,10 +2,12 @@
 
 import { Search, Bell, ChevronDown, Menu } from 'lucide-react';
 import { useSidebar } from './SidebarContext';
+import { useAuth } from './AuthContext';
 import styles from './TopBar.module.css';
 
 export default function TopBar({ title, subtitle }) {
   const { toggle } = useSidebar();
+  const { user } = useAuth();
 
   return (
     <header className={styles.topbar}>
@@ -36,10 +38,12 @@ export default function TopBar({ title, subtitle }) {
         </button>
 
         <div className={styles.userMenu}>
-          <div className={styles.avatar}>A</div>
+          <div className={styles.avatar}>{user?.name?.charAt(0) || 'U'}</div>
           <div className={styles.userInfo}>
-            <span className={styles.userName}>Admin</span>
-            <span className={styles.userRole}>Property Manager</span>
+            <span className={styles.userName}>{user?.name || 'User'}</span>
+            <span className={styles.userRole}>
+              {user?.role === 'admin' ? 'Property Manager' : 'Tenant'}
+            </span>
           </div>
           <ChevronDown size={14} className={styles.chevron} />
         </div>

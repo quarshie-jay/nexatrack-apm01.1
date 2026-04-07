@@ -11,24 +11,19 @@ function seededRandom(seed) {
 
 const TENANT_NAMES = [
   'Kwame Asante', 'Ama Mensah', 'Kofi Boateng', 'Efua Darko',
-  'Yaw Adjei', 'Abena Osei', 'Kojo Amponsah', 'Akosua Nyarko',
-  'Nana Owusu', 'Adjoa Poku', 'Kwesi Appiah', 'Adwoa Frimpong',
-  'Papa Agyemang', 'Afia Bonsu', 'Nii Quaye', 'Gifty Tetteh',
-  'Kwabena Danso', 'Esi Amoah', 'Yaw Mensah', 'Akua Sarpong',
-  'Kofi Antwi', 'Aba Ofori', 'Kweku Baffoe', 'Adoma Serwah',
 ];
 
 // ---------- Meters (deterministic) ----------
 const rng = seededRandom(42);
 
-export const MOCK_METERS = Array.from({ length: 24 }, (_, i) => {
+export const MOCK_METERS = Array.from({ length: 5 }, (_, i) => {
   const unitNum = `${String(Math.floor(i / 4) + 1).padStart(2, '0')}${String.fromCharCode(65 + (i % 4))}`;
   const isOnline = rng() > 0.2;
   const currentLoad = isOnline ? +(rng() * 4.5 + 0.1).toFixed(2) : 0;
   const totalKwh = +(rng() * 2000 + 100).toFixed(1);
   const creditBalance = +(rng() * 500 + 5).toFixed(2);
   // Use a fixed reference date instead of Date.now()
-  const REF = 1743879600000; // 2025-04-05T19:00:00Z
+  const REF = 1775484000000; // 2026-04-06T14:00:00Z
   const lastSeen = isOnline
     ? new Date(REF - rng() * 300000)
     : new Date(REF - rng() * 86400000 * 3);
@@ -69,8 +64,10 @@ export function getMeterSummary(meters) {
 }
 
 // ---------- Hourly usage (deterministic) ----------
-export function generateHourlyUsage() {
-  const r = seededRandom(100);
+export function generateHourlyUsage(meterId) {
+  // Use a different seed for each meter if needed
+  const meterSeed = meterId ? parseInt(meterId.split('-')[1]) * 100 : 100;
+  const r = seededRandom(meterSeed);
   const data = [];
   for (let i = 23; i >= 0; i--) {
     const h = (19 - i + 24) % 24; // deterministic hour labels starting from a fixed point
@@ -88,15 +85,16 @@ export function generateHourlyUsage() {
 }
 
 // ---------- Daily usage (deterministic) ----------
-export function generateDailyUsage() {
-  const r = seededRandom(200);
+export function generateDailyUsage(meterId) {
+  const meterSeed = meterId ? parseInt(meterId.split('-')[1]) * 200 : 200;
+  const r = seededRandom(meterSeed);
   const data = [];
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  // Use fixed reference date: Apr 5
+  // Use fixed reference date: Apr 6
   for (let i = 29; i >= 0; i--) {
-    const dayOffset = 5 - i; // relative to Apr 5
+    const dayOffset = 6 - i; // relative to Apr 6
     let month = 3; // April (0-indexed)
-    let day = 5 - i;
+    let day = 6 - i;
     if (day <= 0) {
       month = 2; // March
       day = 31 + day;
@@ -124,7 +122,7 @@ export function generateAlerts() {
     { type: 'tamper', message: 'Possible tamper event detected' },
   ];
 
-  const REF = 1743879600000;
+  const REF = 1775484000000;
   const alerts = Array.from({ length: 12 }, (_, i) => {
     const t = types[i % types.length];
     const meterIdx = Math.floor(r() * MOCK_METERS.length);
@@ -143,10 +141,17 @@ export function generateAlerts() {
 }
 
 // ---------- Transactions (deterministic) ----------
-export function generateTransactions() {
-  const r = seededRandom(400);
+export function generateTransactions(meterId) {
+  const meterSeed = meterId ? parseInt(meterId.split('-')[1]) * 400 : 400;
+  const r = seededRandom(meterSeed);
   const types = ['topup', 'consumption', 'adjustment'];
-  const REF = 1743879600000;
+  const REF = 1775484000000;
+  
+  // Filter by meter if meterId provided
+  const targetMeter = meterId 
+    ? MOCK_METERS.find(m => m.id === meterId) 
+    : null;
+
   const txns = Array.from({ length: 20 }, (_, i) => {
     const type = types[i % 3];
     const amount = type === 'topup'
@@ -154,11 +159,15 @@ export function generateTransactions() {
       : type === 'consumption'
         ? -(r() * 30 + 2).toFixed(2)
         : +(r() * 20 - 10).toFixed(2);
-    const meterIdx = Math.floor(r() * MOCK_METERS.length);
+    
+    // If we have a target meter, use it, otherwise pick random
+    const currentMeter = targetMeter || MOCK_METERS[Math.floor(r() * MOCK_METERS.length)];
+    
     return {
       id: `txn-${i + 1}`,
-      tenantName: MOCK_METERS[meterIdx].tenantName,
-      meterName: MOCK_METERS[meterIdx].meterName,
+      tenantName: currentMeter.tenantName,
+      meterName: currentMeter.meterName,
+      meterId: currentMeter.id,
       type,
       amount: +amount,
       description: type === 'topup' ? 'Paystack top-up' : type === 'consumption' ? 'Hourly deduction' : 'Admin adjustment',
