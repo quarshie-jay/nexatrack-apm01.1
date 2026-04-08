@@ -19,6 +19,14 @@ export function AuthProvider({ children }) {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
+        
+        // Migrate legacy user sessions
+        if (parsedUser.meterId && !parsedUser.meterIds) {
+          parsedUser.meterIds = [parsedUser.meterId];
+          delete parsedUser.meterId;
+          localStorage.setItem('nexatrack_user', JSON.stringify(parsedUser));
+        }
+
         setUser(parsedUser);
         if (storedMeter) {
            setActiveMeterId(storedMeter);
