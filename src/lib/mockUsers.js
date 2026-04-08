@@ -7,7 +7,7 @@ export const MOCK_USERS = [
     password: 'admin',
     name: 'Admin User',
     role: 'admin',
-    meterId: null, // Admins don't have a specific meter
+    meterIds: [], // Admins don't have a specific meter
   },
   {
     id: 'user-tenant-1',
@@ -15,7 +15,7 @@ export const MOCK_USERS = [
     password: 'tenant123',
     name: 'Kwame Asante',
     role: 'tenant',
-    meterId: 'meter-1',
+    meterIds: ['meter-1', 'meter-5'], // Kwame has 2 meters
   },
   {
     id: 'user-tenant-2',
@@ -23,7 +23,7 @@ export const MOCK_USERS = [
     password: 'tenant123',
     name: 'Ama Mensah',
     role: 'tenant',
-    meterId: 'meter-2',
+    meterIds: ['meter-2'],
   },
   {
     id: 'user-tenant-3',
@@ -31,7 +31,7 @@ export const MOCK_USERS = [
     password: 'tenant123',
     name: 'Kofi Boateng',
     role: 'tenant',
-    meterId: 'meter-3',
+    meterIds: ['meter-3'],
   },
   {
     id: 'user-tenant-4',
@@ -39,7 +39,7 @@ export const MOCK_USERS = [
     password: 'tenant123',
     name: 'Efua Darko',
     role: 'tenant',
-    meterId: 'meter-4',
+    meterIds: ['meter-4'],
   }
 ];
 

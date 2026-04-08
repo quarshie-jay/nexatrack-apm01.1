@@ -12,20 +12,20 @@ import { MOCK_METERS, generateTransactions } from '@/lib/mockData';
 import styles from './page.module.css';
 
 export default function Transactions() {
-  const { user } = useAuth();
+  const { user, activeMeterId } = useAuth();
   const [meter, setMeter] = useState(null);
   const [txns, setTxns] = useState([]);
   const [activeTab, setActiveTab] = useState('This month');
 
   useEffect(() => {
-    if (user?.meterId) {
-      const found = MOCK_METERS.find(m => m.id === user.meterId);
+    if (activeMeterId) {
+      const found = MOCK_METERS.find(m => m.id === activeMeterId);
       if (found) {
         setMeter(found);
-        setTxns(generateTransactions(user.meterId));
+        setTxns(generateTransactions(activeMeterId));
       }
     }
-  }, [user]);
+  }, [activeMeterId]);
 
   if (!user || !meter) return null;
 

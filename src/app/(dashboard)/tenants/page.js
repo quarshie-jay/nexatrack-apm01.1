@@ -4,29 +4,29 @@ import { useState, useMemo } from 'react';
 import { Search, Plus, MoreVertical, Mail, Phone } from 'lucide-react';
 import TopBar from '@/components/TopBar';
 import { MOCK_METERS } from '@/lib/mockData';
+import { MOCK_USERS } from '@/lib/mockUsers';
 import styles from './page.module.css';
 
 export default function TenantsPage() {
   const [search, setSearch] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTenant, setEditingTenant] = useState(null);
 
   const tenants = useMemo(() => {
-    const map = new Map();
-    MOCK_METERS.forEach(m => {
-      if (!map.has(m.tenantName)) {
-        map.set(m.tenantName, {
-          name: m.tenantName,
-          unitNumber: m.unitNumber,
-          meters: [],
-          totalKwh: 0,
-          totalCredit: 0,
-        });
-      }
-      const t = map.get(m.tenantName);
-      t.meters.push(m);
-      t.totalKwh += m.totalKwh;
-      t.totalCredit += m.creditBalance;
+    // Start with strictly users with role 'tenant'
+    const tenantUsers = MOCK_USERS.filter(u => u.role === 'tenant');
+    return tenantUsers.map(user => {
+      const assignedMeters = (user.meterIds || []).map(mid => MOCK_METERS.find(m => m.id === mid)).filter(Boolean);
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        unitNumber: assignedMeters.length > 0 ? assignedMeters[0].unitNumber : 'Unassigned',
+        meters: assignedMeters,
+        totalKwh: assignedMeters.reduce((sum, m) => sum + m.totalKwh, 0),
+        totalCredit: assignedMeters.reduce((sum, m) => sum + m.creditBalance, 0),
+      };
     });
-    return Array.from(map.values());
   }, []);
 
   const filtered = useMemo(() => {
@@ -55,7 +55,7 @@ export default function TenantsPage() {
               id="tenant-search"
             />
           </div>
-          <button className="btn btn-primary" id="add-tenant-btn">
+          <button className="btn btn-primary" id="add-tenant-btn" onClick={() => { setEditingTenant(null); setIsModalOpen(true); }}>
             <Plus size={16} />
             <span>Add Tenant</span>
           </button>
@@ -89,7 +89,7 @@ export default function TenantsPage() {
                           <div>
                             <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{t.name}</div>
                             <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                              {t.meters.map(m => m.meterSerial).join(', ')}
+                              {t.email}
                             </div>
                           </div>
                         </div>
@@ -109,7 +109,7 @@ export default function TenantsPage() {
                         </span>
                       </td>
                       <td>
-                        <button className={styles.moreBtn} aria-label="More options">
+                        <button className={styles.moreBtn} aria-label="Edit" onClick={() => { setEditingTenant(t); setIsModalOpen(true); }}>
                           <MoreVertical size={16} />
                         </button>
                       </td>
@@ -125,6 +125,41 @@ export default function TenantsPage() {
           Showing {filtered.length} of {tenants.length} tenants
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>{editingTenant ? 'Edit Tenant' : 'Add New Tenant'}</h2>
+              <button className={styles.closeModalBtn} onClick={() => setIsModalOpen(false)}>✕</button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className="formGroup">
+                <label>Full Name</label>
+                <input type="text" className="input" defaultValue={editingTenant?.name || ''} />
+              </div>
+              <div className="formGroup" style={{ marginTop: '16px' }}>
+                <label>Email Address</label>
+                <input type="email" className="input" defaultValue={editingTenant?.email || ''} />
+              </div>
+              <div className="formGroup" style={{ marginTop: '16px' }}>
+                <label>Assign Meters (Hold Ctrl to select multiple)</label>
+                <select multiple className="input" style={{ height: '100px' }} defaultValue={editingTenant?.meters.map(m => m.id) || []}>
+                  {MOCK_METERS.map(m => (
+                    <option key={m.id} value={m.id}>Unit {m.unitNumber} ({m.meterSerial})</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className={styles.modalFooter}>
+              <button className="btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
+              <button className="btn btn-primary" onClick={() => setIsModalOpen(false)}>
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -13,20 +13,20 @@ import { MOCK_METERS, generateHourlyUsage } from '@/lib/mockData';
 import styles from './page.module.css';
 
 export default function MyMeter() {
-  const { user } = useAuth();
+  const { user, activeMeterId } = useAuth();
   const router = useRouter();
   const [meter, setMeter] = useState(null);
   const [usageData, setUsageData] = useState([]);
 
   useEffect(() => {
-    if (user?.meterId) {
-      const found = MOCK_METERS.find(m => m.id === user.meterId);
+    if (activeMeterId) {
+      const found = MOCK_METERS.find(m => m.id === activeMeterId);
       if (found) {
         setMeter(found);
-        setUsageData(generateHourlyUsage(user.meterId));
+        setUsageData(generateHourlyUsage(activeMeterId));
       }
     }
-  }, [user]);
+  }, [activeMeterId]);
 
   if (!user) return null;
 

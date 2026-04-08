@@ -3,11 +3,12 @@
 import { Search, Bell, ChevronDown, Menu } from 'lucide-react';
 import { useSidebar } from './SidebarContext';
 import { useAuth } from './AuthContext';
+import { MOCK_METERS } from '@/lib/mockData';
 import styles from './TopBar.module.css';
 
 export default function TopBar({ title, subtitle }) {
   const { toggle } = useSidebar();
-  const { user } = useAuth();
+  const { user, activeMeterId, switchActiveMeter } = useAuth();
 
   return (
     <header className={styles.topbar}>
@@ -22,6 +23,23 @@ export default function TopBar({ title, subtitle }) {
       </div>
 
       <div className={styles.right}>
+        {user?.role === 'tenant' && user?.meterIds?.length > 1 && (
+          <select 
+            className={styles.meterSwitcher}
+            value={activeMeterId || user.meterIds[0]}
+            onChange={(e) => switchActiveMeter(e.target.value)}
+          >
+            {user.meterIds.map(mid => {
+              const meter = MOCK_METERS.find(m => m.id === mid);
+              return (
+                <option key={mid} value={mid}>
+                  {meter ? meter.meterName : mid}
+                </option>
+              );
+            })}
+          </select>
+        )}
+
         <div className={styles.searchBox}>
           <Search size={16} className={styles.searchIcon} />
           <input

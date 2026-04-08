@@ -13,12 +13,13 @@ const NAV_ITEMS = [
   { href: '/my-meter', label: 'My Meter', icon: Zap },
   { href: '/transactions', label: 'Transactions', icon: CreditCard },
   { href: '/my-topup', label: 'Top-Up Credits', icon: PlusCircle },
+  { href: '/profile', label: 'My Profile', icon: User },
 ];
 
 export default function TenantSidebar() {
   const pathname = usePathname();
   const { isOpen, close } = useSidebar();
-  const { user, logout } = useAuth();
+  const { user, activeMeterId, logout } = useAuth();
 
   const handleNavClick = () => {
     close();
@@ -51,7 +52,7 @@ export default function TenantSidebar() {
           </div>
           <div className={styles.userDetails}>
             <span className={styles.userName}>{user?.name || 'Tenant User'}</span>
-            <span className={styles.userUnit}>Unit {user?.meterId?.replace('meter-', '') || 'Unknown'}</span>
+            <span className={styles.userUnit}>Unit {activeMeterId?.replace('meter-', '') || 'Unknown'}</span>
           </div>
         </div>
 

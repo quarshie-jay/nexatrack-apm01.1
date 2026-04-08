@@ -10,7 +10,7 @@ import { MOCK_METERS, TARIFF_RATE } from '@/lib/mockData';
 import styles from './page.module.css';
 
 export default function MyTopUp() {
-  const { user } = useAuth();
+  const { user, activeMeterId } = useAuth();
   const router = useRouter();
   const [meter, setMeter] = useState(null);
   
@@ -19,11 +19,11 @@ export default function MyTopUp() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    if (user?.meterId) {
-      const found = MOCK_METERS.find(m => m.id === user.meterId);
+    if (activeMeterId) {
+      const found = MOCK_METERS.find(m => m.id === activeMeterId);
       if (found) setMeter(found);
     }
-  }, [user]);
+  }, [activeMeterId]);
 
   const quickAmounts = [20, 50, 100, 200];
   const equivalentKwh = amount ? (Number(amount) / TARIFF_RATE).toFixed(1) : '0.0';

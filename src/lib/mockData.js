@@ -9,9 +9,12 @@ function seededRandom(seed) {
   };
 }
 
-const TENANT_NAMES = [
-  'Kwame Asante', 'Ama Mensah', 'Kofi Boateng', 'Efua Darko',
-];
+import { MOCK_USERS } from './mockUsers';
+
+function getTenantForMeter(meterId) {
+  const user = MOCK_USERS.find(u => u.meterIds && u.meterIds.includes(meterId));
+  return user ? user.name : 'Unassigned';
+}
 
 // ---------- Meters (deterministic) ----------
 const rng = seededRandom(42);
@@ -33,7 +36,7 @@ export const MOCK_METERS = Array.from({ length: 5 }, (_, i) => {
     meterSerial: `NXA-APM01-${String(1000 + i)}`,
     meterName: `Unit ${unitNum}`,
     unitNumber: unitNum,
-    tenantName: TENANT_NAMES[i % TENANT_NAMES.length],
+    tenantName: getTenantForMeter(`meter-${i + 1}`),
     status: isOnline ? 'online' : 'offline',
     currentLoad,
     totalKwh,
