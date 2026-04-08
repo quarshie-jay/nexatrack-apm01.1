@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
     if (isLoading) return;
 
     const isLoginPage = pathname === '/login';
-    const isTenantRoute = pathname.startsWith('/my-') || pathname === '/transactions';
+    const isTenantRoute = pathname.startsWith('/my-') || pathname === '/transactions' || pathname === '/profile';
     
     // Allow root / to handle its own generic redirect
     if (pathname === '/') return; 
