@@ -46,8 +46,6 @@ export default function SettingsPage() {
                 onChange={e => setCurrency(e.target.value)}
               >
                 <option value="GHS">GHS — Ghana Cedi (₵)</option>
-                <option value="USD">USD — US Dollar ($)</option>
-                <option value="NGN">NGN — Naira (₦)</option>
               </select>
             </div>
           </div>
