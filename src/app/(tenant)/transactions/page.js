@@ -49,12 +49,15 @@ export default function Transactions() {
           {/* User Profile Card */}
           <div className={styles.profileCard}>
             <div className={styles.profileHeader}>
-              <h1 className={styles.userName}>
-                {user.name.toUpperCase()}
-              </h1>
-              <button className={styles.editBtn} aria-label="Edit Profile">
+              <div>
+                <h1 className={styles.userName}>
+                  Meter Details
+                </h1>
+                <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.8 }}>Assigned to: {user.name}</p>
+              </div>
+              <Link href="/profile" className={styles.editBtn} aria-label="Settings">
                 <Edit2 size={16} />
-              </button>
+              </Link>
             </div>
             
             <div className={styles.meterBadges}>
@@ -172,8 +175,10 @@ export default function Transactions() {
               {txn.type === 'topup' ? <CreditCard size={20} /> : <Zap size={20} />}
             </div>
             <div className={styles.txnDetails}>
-              <div className={styles.txnTitle}>{user.name.toUpperCase()}</div>
-              <div className={styles.txnType}>{txn.description}</div>
+              <div className={styles.txnTitle}>{txn.description}</div>
+              <div className={styles.txnType}>
+                {txn.type === 'topup' ? 'Credit Addition' : txn.type === 'consumption' ? 'Usage Deduction' : 'System Adjustment'}
+              </div>
               <div className={styles.txnDate}>
                 {new Date(txn.createdAt).toLocaleDateString(undefined, { 
                   month: 'short', day: 'numeric', year: 'numeric' 
@@ -182,11 +187,11 @@ export default function Transactions() {
                 })}
               </div>
             </div>
-            <div className={styles.txnAmount}>
+            <div className={`${styles.txnAmount} ${txn.amount > 0 ? styles.amountPositive : styles.amountNegative}`}>
               <span className={styles.amountText}>
-                GHS {Math.abs(txn.amount).toFixed(2)}
+                {txn.amount > 0 ? '+' : '-'} GHS {Math.abs(txn.amount).toFixed(2)}
               </span>
-              <CheckCircle2 size={18} className={styles.statusIcon} />
+              {txn.amount > 0 && <CheckCircle2 size={18} className={styles.statusIcon} />}
             </div>
           </div>
         ))}
