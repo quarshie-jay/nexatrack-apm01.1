@@ -41,7 +41,7 @@ export default function Login() {
             <Activity size={32} strokeWidth={2.5} />
           </div>
           <h1 className={styles.logoTitle}>NEXATRACK</h1>
-          <p className={styles.logoSub}>Gateway Access</p>
+
         </div>
 
         <form onSubmit={handleLogin}>
