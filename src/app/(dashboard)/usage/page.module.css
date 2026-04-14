@@ -68,6 +68,35 @@
   padding: 20px 24px 16px;
 }
 
+.tableWrap {
+  padding: 0 12px 12px;
+}
+
+.meterName {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.meterSerial {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  margin-top: 2px;
+}
+
+.tableSection :global(.table) {
+  font-size: 14px;
+}
+
+.tableSection :global(.table thead th) {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.tableSection :global(.table tbody td) {
+  color: var(--text-primary);
+}
+
 .tooltip {
   background: var(--text-primary);
   padding: 8px 12px;
@@ -89,4 +118,23 @@
 .tooltipCost {
   font-size: 12px;
   color: #94A3B8;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+
+  .tableHeader {
+    padding: 16px 16px 12px;
+  }
+
+  .tableWrap {
+    padding: 0 8px 8px;
+  }
+
+  .tableSection :global(.table thead th),
+  .tableSection :global(.table tbody td) {
+    padding: 10px 12px;
+  }
 }
