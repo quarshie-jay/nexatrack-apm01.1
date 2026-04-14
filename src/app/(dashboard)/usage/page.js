@@ -106,7 +106,7 @@ export default function UsagePage() {
           <div className={styles.tableHeader}>
             <h2 className={styles.chartTitle}>Per-Meter Breakdown</h2>
           </div>
-          <div className="table-container">
+          <div className={`table-container ${styles.tableWrap}`}>
             <table className="table">
               <thead>
                 <tr>
@@ -124,8 +124,8 @@ export default function UsagePage() {
                 {MOCK_METERS.map(m => (
                   <tr key={m.id}>
                     <td>
-                      <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{m.meterName}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'monospace' }}>{m.meterSerial}</div>
+                      <div className={styles.meterName}>{m.meterName}</div>
+                      <div className={styles.meterSerial}>{m.meterSerial}</div>
                     </td>
                     <td>{m.tenantName}</td>
                     <td>
